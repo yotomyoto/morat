@@ -1,4 +1,4 @@
-
+ 
 #pragma once
 
 #include <algorithm>
@@ -52,7 +52,7 @@ struct TimeControl {
 					break;
 				}//fall back to even
 			case EVEN:
-				ret += 2.0 * param * remain / (moves_max - moves_made);
+				ret += 2.0 * param * remain / moves_max;
 				break;
 		}
 
