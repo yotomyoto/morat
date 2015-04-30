@@ -254,7 +254,7 @@ bool AgentMCTS::do_backup(Node * node, Node * backup, Side toplay){
 
 	uint8_t proofdepth = backup->proofdepth;
 	if(backup->outcome != toplay){
-		uint64_t sims = 0, bestsims = 0, outcome = 0, best_outcome = 0;
+		uint64_t depth = 0, bestdepth = 0, outcome = 0, best_outcome = 0;
 		backup = NULL;
 
 		Node * child = node->children.begin(),
@@ -290,14 +290,14 @@ bool AgentMCTS::do_backup(Node * node, Node * backup, Side toplay){
 				assert(false && "How'd I get here? All outcomes should be tested above");
 			}
 
-			sims = child->exp.num();
+			depth = child->proofdepth;
 			if(best_outcome < outcome || backup == NULL){ //better outcome is always preferable
 				best_outcome = outcome;
-				bestsims = sims;
+				bestdepth = proofdepth;
 				backup = child;
-			}else if(best_outcome == outcome && ((outcome == 0 && bestsims < sims) || bestsims > sims)){
+			}else if(best_outcome == outcome && ((outcome == 0 && bestdepth < depth) || bestdepth > depth)){
 				//find long losses or easy wins/draws
-				bestsims = sims;
+				bestdepth = depth;
 				backup = child;
 			}
 		}
