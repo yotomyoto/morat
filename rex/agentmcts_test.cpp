@@ -17,8 +17,8 @@ void test_playout(AgentMCTS &agent, Outcome outcome){
 	REQUIRE(agent.rootboard.won() == outcome);
 }
 
-void setup_game(AgentMCTS &agent, std::string size, std::vector<std::string> moves){
-	Board b(4);
+void setup_game(AgentMCTS &agent, int size, std::vector<std::string> moves){
+	Board b(size);
 	agent.set_board(b, true);
 	for(auto m : moves) {
 		agent.move(Move(m));
@@ -36,8 +36,8 @@ TEST_CASE("Rex::AgentMCTS::Node::to_s/from_s", "[rex][agentmcts]") {
 TEST_CASE("Rex::AgentMCTS 3x3", "[rex][agentmcts]"){
 	SECTION("Unspecified Opening"){
 		AgentMCTS agent;
-		setup_game(agent, "3", {});//4x4 board with no specified opening
-		test_playout(agent, Outcome::P2);//should be player1 win
+		setup_game(agent, 3, {});//3x3 board with no specified opening
+		test_playout(agent, Outcome::P2);//should be player2 win
 	}
 }
 
@@ -45,19 +45,19 @@ TEST_CASE("Rex::AgentMCTS 4x4", "[rex][agentmcts]"){
 
 	SECTION("Unspecified Opening"){
 		AgentMCTS agent;
-		setup_game(agent, "4", {});//4x4 board with no specified opening
+		setup_game(agent, 4, {});//4x4 board with no specified opening
 		test_playout(agent, Outcome::P1);//should be player1 win
 	}
 
-	SECTION("Obtuse Corner Open"){
+	SECTION("Obtuse Corner Opening"){
 		AgentMCTS agent;
-		setup_game(agent, "4", {"a4"});//4x4 board with obtuse corner opening move
+		setup_game(agent, 4, {"a4"});//4x4 board with obtuse corner opening move
 		test_playout(agent, Outcome::P1);//should be player1 win
 	}
 
-	SECTION("Acute Corner Open"){
+	SECTION("Acute Corner Opening"){
 		AgentMCTS agent;
-		setup_game(agent, "4", {"a1"});//4x4 board with acute corner opening move
+		setup_game(agent, 4, {"a1"});//4x4 board with acute corner opening move
 		test_playout(agent, Outcome::P1);//should be player1 win
 	}	
 }

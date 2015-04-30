@@ -293,7 +293,7 @@ bool AgentMCTS::do_backup(Node * node, Node * backup, Side toplay){
 			depth = child->proofdepth;
 			if(best_outcome < outcome || backup == NULL){ //better outcome is always preferable
 				best_outcome = outcome;
-				bestdepth = proofdepth;
+				bestdepth = depth;
 				backup = child;
 			}else if(best_outcome == outcome && ((outcome == 0 && bestdepth < depth) || bestdepth > depth)){
 				//find long losses or easy wins/draws
