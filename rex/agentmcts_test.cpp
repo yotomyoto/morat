@@ -59,7 +59,45 @@ TEST_CASE("Rex::AgentMCTS 4x4", "[rex][agentmcts]"){
 		AgentMCTS agent;
 		setup_game(agent, 4, {"a1"});//4x4 board with acute corner opening move
 		test_playout(agent, Outcome::P1);//should be player1 win
-	}	
+	}
+
+	SECTION("Center Opening"){
+		AgentMCTS agent;
+		setup_game(agent, 4, {"c2"});//4x4 board with center opening move
+		test_playout(agent, Outcome::P2);//this opening is player2 win
+	}
+
+	SECTION("Offcenter Opening"){
+		AgentMCTS agent;
+		setup_game(agent, 4, {"b2"});
+		test_playout(agent, Outcome::P1);//should be player1 win
+	}
+
+	SECTION("Adjecent to Acute Opening"){
+		AgentMCTS agent;
+		setup_game(agent, 4, {"b1"});
+		test_playout(agent, Outcome::P1);//should be player1 win
+	}
+
+	SECTION("Adjecent to Obtuse Opening"){
+		AgentMCTS agent;
+		setup_game(agent, 4, {"a3"});
+		test_playout(agent, Outcome::P1);//should be player1 win
+	}
+}
+
+TEST_CASE("Rex::AgentMCTS 5x5", "[rex][agentmcts]"){
+	SECTION("Unspecified Opening/Reply"){
+		AgentMCTS agent;
+		setup_game(agent, 5, {});//5x5 board with no specified opening
+		test_playout(agent, Outcome::P2);//should be player2 win
+	}
+
+	SECTION("Acute Opening/Reply"){
+		AgentMCTS agent;
+		setup_game(agent, 3, {"a1", "e5"});//3x3 board with no specified opening
+		test_playout(agent, Outcome::P2);//should be player2 win
+	}
 }
 
 
