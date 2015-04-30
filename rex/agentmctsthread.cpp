@@ -252,7 +252,7 @@ bool AgentMCTS::do_backup(Node * node, Node * backup, Side toplay){
 		return false;
 
 
-	uint8_t proofdepth = backup->proofdepth;
+	uint8_t proofdepth = backup->proofdepth+1;
 	if(backup->outcome != toplay){
 		uint64_t depth = 0, bestdepth = 0, outcome = 0, best_outcome = 0;
 		backup = NULL;
