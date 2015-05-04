@@ -11,7 +11,7 @@ namespace Morat {
 
 template<class Board>
 class History {
-	std::vector<Move> hist;
+	std::vector<MovePlayer> hist;
 	Board board;
 
 public:
@@ -23,7 +23,7 @@ public:
 		return hist[i];
 	}
 
-	Move last() const {
+	MovePlayer last() const {
 		if(hist.size() == 0)
 			return M_NONE;
 
@@ -33,8 +33,8 @@ public:
 	const Board & operator * ()  const { return board; }
 	const Board * operator -> () const { return & board; }
 
-	std::vector<Move>::const_iterator begin() const { return hist.begin(); }
-	std::vector<Move>::const_iterator end()   const { return hist.end(); }
+	std::vector<MovePlayer>::const_iterator begin() const { return hist.begin(); }
+	std::vector<MovePlayer>::const_iterator end()   const { return hist.end(); }
 
 	const Board get_board() const {
 		Board b(board.get_size());
@@ -61,7 +61,15 @@ public:
 		return true;
 	}
 
-	bool move(const Move & m) {
+	void setturn(Side turn){
+		board.setturn(turn);
+	}
+
+	bool move(const Move & m){
+		return move(MovePlayer(m,board.toplay()));
+	}
+
+	bool move(const MovePlayer & m) {
 		if(board.valid_move(m)){
 			board.move(m);
 			hist.push_back(m);

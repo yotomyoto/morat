@@ -305,6 +305,10 @@ public:
 		return toPlay;
 	}
 
+	void setturn(Side turn){
+		toPlay = turn;
+	}
+
 	MoveIterator moveit(bool unique = false) const {
 		return MoveIterator(*this, (unique ? nummoves <= unique_depth : false));
 	}
@@ -512,16 +516,20 @@ public:
 		return m;
 	}
 
-	bool move(const Move & pos, bool checkwin = true, bool permanent = true) {
+	bool move(const MovePlayer & pos, bool checkwin = true, bool permanent = true) {
+		toPlay = pos.player;
 		return move(MoveValid(pos, xy(pos)), checkwin, permanent);
 	}
+    bool move(const Move & pos, bool checkwin = true, bool permanent = true) {
+        return move(MoveValid(pos, xy(pos)), checkwin, permanent);
+    }
 	bool move(const MoveValid & pos, bool checkwin = true, bool permanent = true) {
 		assert(outcome < Outcome::DRAW);
 
 		if(!valid_move(pos))
 			return false;
 
-		Side turn = toplay();
+        Side turn = toplay();
 		set(pos, permanent);
 
 		// update the nearby patterns

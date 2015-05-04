@@ -42,6 +42,9 @@ GTPResponse GTP::gtp_solve(vecstr args){
 
 
 GTPResponse GTP::gtp_genmove(vecstr args){
+    if(freeplace){
+        return GTPResponse(false, "Turn off freeplace to allow gameplay.");
+    }
 	if(hist->won() >= 0)
 		return GTPResponse(true, "resign");
 
