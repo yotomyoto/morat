@@ -170,13 +170,13 @@ bool AgentMCTS::AgentThread::create_children(const Board & board, Node * node){
 		assert(move.done() && child == end);
 
 	//Make a macro move, add experience to the move so the current simulation continues past this move
-	if(losses == 1){
+	if(losses == 1 && board.lastmove()){
 		Node macro = *loss;
 		temp.dealloc(agent->ctmem);
 		temp.alloc(1, agent->ctmem);
 		macro.exp.addwins(agent->visitexpand);
 		*(temp.begin()) = macro;
-	}else if(losses >= 2){ //proven loss, but at least try to block one of them
+	}else if(losses >= 2 && board.lastmove()){ //proven loss, but at least try to block one of them
 		node->outcome = +opponent;
 		node->proofdepth = 2;
 		node->bestmove = loss->move;
