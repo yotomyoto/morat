@@ -59,6 +59,13 @@ test: \
 		hex/agentpns_test.o \
 		hex/board.o \
 		hex/board_test.o \
+		122hex/agentmcts.o \
+		122hex/agentmctsthread.o \
+		122hex/agentmcts_test.o \
+		122hex/agentpns.o \
+		122hex/agentpns_test.o \
+		122hex/board.o \
+		122hex/board_test.o \
 		pentago/agentmcts.o \
 		pentago/agentmctsthread.o \
 		pentago/agentmcts_test.o \
@@ -164,6 +171,22 @@ morat-hex: \
 		$(ALARM)
 	$(CXX) $(LDFLAGS) -o $@ $^ $(LOADLIBES) $(LDLIBS)
 
+morat-122hex: \
+		122hex/main.o \
+		122hex/agentmcts.o \
+		122hex/agentmctsthread.o \
+		122hex/agentpns.o \
+		122hex/board.o \
+		122hex/gtpagent.o \
+		122hex/gtpgeneral.o \
+		lib/fileio.o \
+		lib/gtpcommon.o \
+		lib/outcome.o \
+		lib/string.o \
+		lib/zobrist.o \
+		$(ALARM)
+	$(CXX) $(LDFLAGS) -o $@ $^ $(LOADLIBES) $(LDLIBS)
+
 morat-rex: \
 		rex/main.o \
 		rex/agentmcts.o \
@@ -181,7 +204,7 @@ morat-rex: \
 	$(CXX) $(LDFLAGS) -o $@ $^ $(LOADLIBES) $(LDLIBS)
 
 clean:
-	rm -f */*.o test morat-havannah morat-hex morat-pentago morat-rex morat-y .Makefile
+	rm -f */*.o test morat-havannah morat-hex morat-pentago morat-rex morat-y morat-gomoku .Makefile
 
 fresh: clean all
 
