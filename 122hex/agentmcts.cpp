@@ -152,7 +152,7 @@ AgentMCTS::AgentMCTS() : pool(this) {
 	dists       = 0;
 
 	weightedrandom = false;
-	rolloutpattern = true;
+	rolloutpattern = false;
 	lastgoodreply  = false;
 	instantwin     = 0;
 

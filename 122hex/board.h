@@ -141,6 +141,7 @@ private:
 	Move last;
 	Side toPlay;
 	Outcome outcome;
+	bool lastmove;
 
 	std::vector<Cell> cells;
 	Zobrist<6> hash;
@@ -158,6 +159,7 @@ public:
 		nummoves = 0;
 		unique_depth = 5;
 		toPlay = Side::P1;
+		lastmove = true;
 		outcome = Outcome::UNKNOWN;
 		neighbourlist = get_neighbour_list();
 		num_cells = vecsize();
@@ -316,11 +318,23 @@ public:
 		cell->perm = perm;
 		nummoves++;
 		update_hash(m, toPlay); //depends on nummoves
-		toPlay = ~toPlay;
+		if(lastmove){
+			toPlay = ~toPlay;
+			lastmove = false;
+		}
+		else{
+			lastmove = true;
+		}
 	}
 
 	void unset(const Move & m) { //break win checks, but is a poor mans undo if all you care about is the hash
-		toPlay = ~toPlay;
+        if(!lastmove){
+            toPlay = ~toPlay;
+            lastmove = true;
+        }
+        else{
+            lastmove = false;
+        }
 		update_hash(m, toPlay);
 		nummoves--;
 		Cell * cell = & cells[xy(m)];

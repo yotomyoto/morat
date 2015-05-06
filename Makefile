@@ -204,7 +204,7 @@ morat-rex: \
 	$(CXX) $(LDFLAGS) -o $@ $^ $(LOADLIBES) $(LDLIBS)
 
 clean:
-	rm -f */*.o test morat-havannah morat-hex morat-pentago morat-rex morat-y morat-gomoku .Makefile
+	rm -f */*.o test morat-havannah morat-hex morat-122hex morat-pentago morat-rex morat-y morat-gomoku .Makefile
 
 fresh: clean all
 
