@@ -296,7 +296,7 @@ bool AgentMCTS::do_backup(Node * node, Node * backup, Side toplay){
 					best_outcome = outcome;
 					bestdepth = depth;
 					backup = child;
-				}else if(best_outcome == outcome && ((outcome == 0 && bestdepth < depth) || (outcome != 0 && bestdepth < depth))){
+				}else if(best_outcome == outcome && ((outcome == 0 && bestdepth < depth) || (outcome != 0 && bestdepth > depth))){
 					//find long losses or easy wins/draws
 					bestdepth = depth;
 					backup = child;
