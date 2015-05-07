@@ -65,7 +65,6 @@ test: \
 		122hex/agentpns.o \
 		122hex/agentpns_test.o \
 		122hex/board.o \
-		122hex/board_test.o \
 		pentago/agentmcts.o \
 		pentago/agentmctsthread.o \
 		pentago/agentmcts_test.o \

@@ -7,7 +7,7 @@
 
 
 namespace Morat {
-namespace Hex {
+namespace Hex122 {
 
 std::string AgentPNS::Node::to_s() const {
 	return "AgentPNS::Node"

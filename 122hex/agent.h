@@ -11,7 +11,7 @@
 
 
 namespace Morat {
-namespace Hex {
+namespace Hex122 {
 
 class Agent {
 protected:

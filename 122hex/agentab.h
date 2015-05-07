@@ -9,7 +9,7 @@
 
 
 namespace Morat {
-namespace Hex {
+namespace Hex122 {
 
 class AgentAB : public Agent {
 	static const int16_t SCORE_WIN  = 32767;

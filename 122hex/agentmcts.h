@@ -28,7 +28,7 @@
 
 
 namespace Morat {
-namespace Hex {
+namespace Hex122 {
 
 class AgentMCTS : public Agent{
 public:

@@ -8,7 +8,7 @@
 
 
 namespace Morat {
-namespace Hex {
+namespace Hex122 {
 
 void AgentMCTS::AgentThread::iterate(){
 	INCR(agent->runs);

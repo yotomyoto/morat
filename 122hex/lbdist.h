@@ -7,7 +7,7 @@
 
 
 namespace Morat {
-namespace Hex {
+namespace Hex122 {
 
 class LBDists : public LBDistsBase<LBDists, Board> {
 

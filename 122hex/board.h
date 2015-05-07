@@ -18,7 +18,7 @@
 
 
 namespace Morat {
-namespace Hex {
+namespace Hex122 {
 
 /*
  * the board is represented as a flattened 2d array of the form:

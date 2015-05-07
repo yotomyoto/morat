@@ -3,7 +3,7 @@
 
 
 namespace Morat {
-namespace Hex {
+namespace Hex122 {
 
 using namespace std;
 

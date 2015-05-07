@@ -5,9 +5,9 @@
 
 
 using namespace Morat;
-using namespace Hex;
+using namespace Hex122;
 
-TEST_CASE("Hex::AgentMCTS::Node::to_s/from_s", "[hex][agentmcts]") {
+TEST_CASE("Hex122::AgentMCTS::Node::to_s/from_s", "[hex][agentmcts]") {
 	AgentMCTS::Node n(Move("a1"));
 	auto s = n.to_s();
 	AgentMCTS::Node k;

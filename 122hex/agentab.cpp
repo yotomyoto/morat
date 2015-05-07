@@ -8,7 +8,7 @@
 
 
 namespace Morat {
-namespace Hex {
+namespace Hex122 {
 
 void AgentAB::search(double time, uint64_t maxiters, int verbose) {
 	reset();

@@ -14,7 +14,7 @@
 
 
 namespace Morat {
-namespace Hex {
+namespace Hex122 {
 
 class GTP : public GTPCommon {
 	History<Board> hist;

@@ -8,7 +8,7 @@
 
 
 using namespace Morat;
-using namespace Hex;
+using namespace Hex122;
 
 using namespace std;
 

@@ -12,7 +12,7 @@
 
 
 namespace Morat {
-namespace Hex {
+namespace Hex122 {
 
 const float AgentMCTS::min_rave = 0.1;
 

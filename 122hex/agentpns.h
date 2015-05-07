@@ -16,7 +16,7 @@
 
 
 namespace Morat {
-namespace Hex {
+namespace Hex122 {
 
 class AgentPNS : public Agent {
 	static const uint32_t LOSS  = (1<<30)-1;

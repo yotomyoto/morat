@@ -8,7 +8,7 @@
 
 
 namespace Morat {
-namespace Hex {
+namespace Hex122 {
 
 GTPResponse GTP::gtp_mcts(vecstr args){
 	delete agent;

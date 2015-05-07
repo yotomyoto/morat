@@ -2,7 +2,7 @@
 #include "board.h"
 
 namespace Morat {
-namespace Hex {
+namespace Hex122 {
 
 std::string Board::Cell::to_s(int i) const {
 	return "Cell " + to_str(i) +": "
