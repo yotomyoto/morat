@@ -147,8 +147,11 @@ GTPResponse GTP::place(const std::string & pos, Side toplay){
 	if(!hist->valid_move(mp))
 		return GTPResponse(false, "Invalid move");
 
+	Side turn = hist->toplay();
     hist.move(mp);
+    hist.setturn(turn); //don't want to modify turn if we are just doing a placement
     agent->set_board(*hist);
+
 
 	if(verbose >= 2)
 		logerr("Placement: " + m.to_s() + ", outcome: " + hist->won().to_s() + "\n" + hist->to_s(colorboard));
