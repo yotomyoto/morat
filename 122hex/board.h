@@ -141,7 +141,7 @@ private:
 	Move last;
 	Side toPlay;
 	Outcome outcome;
-	bool lastMove;
+	bool endOfTurn;
 
 	std::vector<Cell> cells;
 	Zobrist<6> hash;
@@ -159,7 +159,7 @@ public:
 		nummoves = 0;
 		unique_depth = 5;
 		toPlay = Side::P1;
-		lastMove = true;
+		endOfTurn = true;
 		outcome = Outcome::UNKNOWN;
 		neighbourlist = get_neighbour_list();
 		num_cells = vecsize();
@@ -307,8 +307,12 @@ public:
 		return toPlay;
 	}
 
-    bool lastmove() const{
-        return lastMove;
+    bool endofturn() const{
+        return endOfTurn;
+    }
+
+    Move lastMove() const{
+        return last;
     }
 
 	MoveIterator moveit(bool unique = false) const {
@@ -322,22 +326,22 @@ public:
 		cell->perm = perm;
 		nummoves++;
 		update_hash(m, toPlay); //depends on nummoves
-		if(lastMove){
+		if(endOfTurn){
 			toPlay = ~toPlay;
-			lastMove = false;
+			endOfTurn = false;
 		}
 		else{
-			lastMove = true;
+			endOfTurn = true;
 		}
 	}
 
 	void unset(const Move & m) { //break win checks, but is a poor mans undo if all you care about is the hash
-        if(!lastMove){
+        if(!endOfTurn){
             toPlay = ~toPlay;
-            lastMove = true;
+            endOfTurn = true;
         }
         else{
-            lastMove = false;
+            endOfTurn = false;
         }
 		update_hash(m, toPlay);
 		nummoves--;

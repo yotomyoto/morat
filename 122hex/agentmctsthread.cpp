@@ -138,7 +138,18 @@ bool AgentMCTS::AgentThread::create_children(const Board & board, Node * node){
 	     * loss  = NULL;
 	Board::MoveIterator move = board.moveit(agent->prunesymmetry);
 	int nummoves = 0;
+
+    /*for 122hex we want to ignore the lowest ordered move played on
+     the first of a players two turns (since we will not be able to
+     follow it with a lower ordered move) *unless* it ends the game*/
+    if(board.endofturn() == false && board.test_outcome(*move)<Outcome::DRAW) ++move;
+
 	for(; !move.done() && child != end; ++move, ++child){
+        /*for 122hex we want to ignore one of the moves which are the same
+         but played in opposite order, we can do this by only accepting
+         lower ordered moves on the 2nd of a player's two turns*/
+        if(board.lastMove() != M_NONE && board.endofturn() == true && *move > board.lastMove()) continue;
+
 		*child = Node(*move);
 
 		if(agent->minimax){
@@ -164,19 +175,21 @@ bool AgentMCTS::AgentThread::create_children(const Board & board, Node * node){
 		nummoves++;
 	}
 
-	if(agent->prunesymmetry)
-		temp.shrink(nummoves); //shrink the node to ignore the extra moves
-	else //both end conditions should happen in parallel
-		assert(move.done() && child == end);
+	//if(agent->prunesymmetry || (board.lastmove() && board.num_moves()>0))
+    //shrink almost everytime here since we generally ignore at least one move
+    if(nummoves<board.movesremain())
+        temp.shrink(nummoves); //shrink the node to ignore the extra moves
+    //else //both end conditions should happen in parallel
+		//assert(move.done() && child == end);
 
 	//Make a macro move, add experience to the move so the current simulation continues past this move
-	if(losses == 1 && board.lastmove()){
+	if(losses == 1 && board.endofturn()){
 		Node macro = *loss;
 		temp.dealloc(agent->ctmem);
 		temp.alloc(1, agent->ctmem);
 		macro.exp.addwins(agent->visitexpand);
 		*(temp.begin()) = macro;
-	}else if(losses >= 2 && board.lastmove()){ //proven loss, but at least try to block one of them
+	}else if(losses >= 2 && board.endofturn()){ //proven loss, but at least try to block one of them
 		node->outcome = +opponent;
 		node->proofdepth = 2;
 		node->bestmove = loss->move;
