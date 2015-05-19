@@ -313,6 +313,8 @@ public:
 		return MoveIterator(*this, (unique ? nummoves <= unique_depth : false));
 	}
 
+	//could change set and unset to use MovePlayer, and possibly change
+	//toPlay value else where
 	void set(const Move & m, bool perm = true) {
 		last = m;
 		Cell * cell = & cells[xy(m)];

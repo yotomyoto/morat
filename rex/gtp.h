@@ -61,8 +61,6 @@ public:
 		newcallback("time",            std::bind(&GTP::gtp_time,          this, _1), "Set the time limits and the algorithm for per game time");
 		newcallback("genmove",         std::bind(&GTP::gtp_genmove,       this, _1), "Generate a move: genmove [color] [time]");
 		newcallback("solve",           std::bind(&GTP::gtp_solve,         this, _1), "Try to solve this position");
-		newcallback("freeplace",       std::bind(&GTP::gtp_freeplace,     this, _1), "Toggle free placement of stones v.s. enforcing turns");
-		newcallback("first",           std::bind(&GTP::gtp_first,         this, _1), "Set which player gets the first move");
 
 //		newcallback("ab",              std::bind(&GTP::gtp_ab,            this, _1), "Switch to use the Alpha/Beta agent to play/solve");
 		newcallback("mcts",            std::bind(&GTP::gtp_mcts,          this, _1), "Switch to use the Monte Carlo Tree Search agent to play/solve");
@@ -121,8 +119,6 @@ public:
 	GTPResponse gtp_pv(vecstr args);
 	GTPResponse gtp_genmove(vecstr args);
 	GTPResponse gtp_solve(vecstr args);
-	GTPResponse gtp_freeplace(vecstr args);
-	GTPResponse gtp_first(vecstr args);
 
 	GTPResponse gtp_params(vecstr args);
 

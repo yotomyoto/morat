@@ -33,7 +33,7 @@ GTPResponse GTP::gtp_ab(vecstr args){
 */
 GTPResponse GTP::gtp_print(vecstr args){
 	Board board = *hist;
-	for(Move arg : args)
+	for(auto arg : args)
 		if (!board.move(arg))
 			break;
 	return GTPResponse(true, "\n" + board.to_s(colorboard));
@@ -106,35 +106,6 @@ GTPResponse GTP::gtp_history(vecstr args){
 	return GTPResponse(true, ret);
 }
 
-GTPResponse GTP::gtp_freeplace(vecstr args){
-	if(freeplace){
-		freeplace = false;
-		return GTPResponse(true, "Turn rotation will now be enforced.");
-	}
-	else{
-		freeplace = true;
-		return GTPResponse(true, "You may now place stones freely.");
-	}
-}
-
-GTPResponse GTP::gtp_first(vecstr args){
-    Board b;
-	if(args.size() != 1)
-		return GTPResponse(false, "Wrong number of arguments");
-	switch(tolower(args[0][0])){
-            case 'w':
-                hist.setturn(Side::P1);
-                agent->set_board(*hist);
-                return GTPResponse(true, "White has next move.");
-            case 'b':
-                hist.setturn(Side::P2);
-                agent->set_board(*hist);
-                return GTPResponse(true, "Black has next move.");
-			default:  return GTPResponse(false, "Invalid player selection");
-	}
-
-}
-
 //like play but we don't enforce turn order and we reset the player so
 //out of order turns don't confuse them
 GTPResponse GTP::place(const std::string & pos, Side toplay){
@@ -191,30 +162,18 @@ GTPResponse GTP::gtp_playgame(vecstr args){
 GTPResponse GTP::gtp_play(vecstr args){
 	if(args.size() != 2)
 		return GTPResponse(false, "Wrong number of arguments");
-	if(freeplace){
-		switch(tolower(args[0][0])){
-			case 'w': return place(args[1], Side::P1);
-			case 'b': return place(args[1], Side::P2);
-			default:  return GTPResponse(false, "Invalid player selection");
-		}
-	}
-	else{
-		switch(tolower(args[0][0])){
-			case 'w': return play(args[1], Side::P1);
-			case 'b': return play(args[1], Side::P2);
-			default:  return GTPResponse(false, "Invalid player selection");
-		}
+	switch(tolower(args[0][0])){
+		case 'w': return play(args[1], Side::P1);
+		case 'b': return play(args[1], Side::P2);
+		default:  return GTPResponse(false, "Invalid player selection");
 	}
 }
 
 GTPResponse GTP::gtp_playwhite(vecstr args){
 	if(args.size() != 1)
 		return GTPResponse(false, "Wrong number of arguments");
-    if(freeplace)
-        return place(args[0], Side::P1);
-    else{
+	
         return play(args[0], Side::P1);
-    }
 }
 
 GTPResponse GTP::gtp_playblack(vecstr args){
