@@ -315,19 +315,17 @@ public:
 
 	//could change set and unset to use MovePlayer, and possibly change
 	//toPlay value else where
-	void set(const Move & m, bool perm = true) {
+	void set(const MovePlayer & m, bool perm = true) {
 		last = m;
 		Cell * cell = & cells[xy(m)];
 		cell->piece = toPlay;
 		cell->perm = perm;
 		nummoves++;
-		update_hash(m, toPlay); //depends on nummoves
-		toPlay = ~toPlay;
+		update_hash(m, m.player); //depends on nummoves
 	}
 
-	void unset(const Move & m) { //break win checks, but is a poor mans undo if all you care about is the hash
-		toPlay = ~toPlay;
-		update_hash(m, toPlay);
+	void unset(const MovePlayer & m) { //break win checks, but is a poor mans undo if all you care about is the hash
+		update_hash(m, m.player);
 		nummoves--;
 		Cell * cell = & cells[xy(m)];
 		cell->piece = Side::NONE;
@@ -518,6 +516,47 @@ public:
 		return m;
 	}
 
+	//like move but doesn't change the turn and requires use of MovePlayer to
+	//specify which color of stone to place
+	bool place(const MovePlayer & pos, bool checkwin = true, bool permanent = true){
+		assert(outcome < Outcome::DRAW);
+
+		if(!valid_move(pos))
+			return false;
+
+		Side turn = pos.player;
+		set(pos, permanent);
+
+		MoveValid posv = MoveValid(pos, xy(pos));
+
+		// update the nearby patterns
+		Pattern p = turn.to_i();
+		for(const MoveValid * i = nb_begin(posv.xy), *e = nb_end_big_hood(i); i < e; i++){
+			if(i->onboard()){
+				cells[i->xy].pattern |= p;
+			}
+			p <<= 2;
+		}
+
+		// join the groups for win detection
+		for(const MoveValid * i = nb_begin(posv.xy), *e = nb_end(i); i < e; i++){
+			if(i->onboard() && turn == get(i->xy)){
+				join_groups(posv.xy, i->xy);
+				i++; //skip the next one. If it is the same group,
+					 //it is already connected and forms a corner, which we can ignore
+			}
+		}
+
+		// did I win?
+		Cell * g = & cells[find_group(posv.xy)];
+		uint8_t winmask = (turn == Side::P1 ? 3 : 0xC);
+		if((g->edge & winmask) == winmask){
+			outcome = ~turn;
+		}
+		return true;
+	}
+
+
 	bool move(const MovePlayer & pos, bool checkwin = true, bool permanent = true) {
 		toPlay = pos.player;
 		return move(MoveValid(pos, xy(pos)), checkwin, permanent);
@@ -532,7 +571,7 @@ public:
 			return false;
 
         Side turn = toplay();
-		set(pos, permanent);
+		set(MovePlayer(pos, turn), permanent);
 
 		// update the nearby patterns
 		Pattern p = turn.to_i();
@@ -558,6 +597,7 @@ public:
 		if((g->edge & winmask) == winmask){
 			outcome = ~turn;
 		}
+		toPlay = ~toPlay;
 		return true;
 	}
 

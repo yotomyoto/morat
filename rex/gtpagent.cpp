@@ -53,10 +53,26 @@ GTPResponse GTP::gtp_genmove(vecstr args){
 	if(verbose)
 		logerr("time:        remain: " + to_str(time_control.remain, 1) + ", use: " + to_str(use_time, 3) + ", sims: " + to_str(time_control.max_sims) + "\n");
 
+	Side player = Side::NONE;
+	if(args.size()>0){
+		if(args[0][0] == 'w')
+			player = Side::P1;
+		else if(args[0][0] == 'b')
+			player = Side::P2;
+		else
+			return GTPResponse(false, "Unrecognized player");
+	}
+
+	if(!(player == Side::NONE || player == hist->toplay())){
+		//we've been asked to generate a move for the wrong player so change
+		//the turn and reset the agent with the new board
+		hist.setturn(player);	
+		set_board(false);
+	}
+
 	Time start;
 	agent->search(use_time, time_control.max_sims, verbose);
 	time_control.use(Time() - start);
-
 
 	Move best = agent->return_move(verbose);
 

@@ -83,7 +83,14 @@ public:
 	}
 
 	void set_board(bool clear = true){
-		agent->set_board(*hist);
+		agent->set_board(*hist, clear);
+	}
+
+	//place stone and reset agent with new board since the old tree does not
+	//apply for out of order moves
+	void place(const MovePlayer & m){
+		hist.move(m);
+		set_board(false);
 	}
 
     void move(const Move & m){

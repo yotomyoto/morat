@@ -82,6 +82,10 @@ struct MovePlayer : public Move {
 
 	MovePlayer(MoveSpecial a = M_UNKNOWN) : Move(a), player(Side::NONE) { }
 	MovePlayer(const Move & m, Side p = Side::NONE) : Move(m), player(p) { }
+
+	std::string to_s() const {
+		return std::string() + Move::to_s() + player.to_s()[0];
+	}
 };
 
 }; // namespace Morat

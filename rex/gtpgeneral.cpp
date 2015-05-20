@@ -106,56 +106,58 @@ GTPResponse GTP::gtp_history(vecstr args){
 	return GTPResponse(true, ret);
 }
 
-//like play but we don't enforce turn order and we reset the player so
-//out of order turns don't confuse them
-GTPResponse GTP::place(const std::string & pos, Side toplay){
-	if(hist->won() >= Outcome::DRAW)
-		return GTPResponse(false, "The game is already over.");
-
-	Move m(pos);
-	MovePlayer mp(m, toplay);
-
-	if(!hist->valid_move(mp))
-		return GTPResponse(false, "Invalid move");
-
-	Side turn = hist->toplay();
-    hist.move(mp);
-    hist.setturn(turn); //don't want to modify turn if we are just doing a placement
-    agent->set_board(*hist);
-
-
-	if(verbose >= 2)
-		logerr("Placement: " + m.to_s() + ", outcome: " + hist->won().to_s() + "\n" + hist->to_s(colorboard));
-
-	return GTPResponse(true);
-}
-
 GTPResponse GTP::play(const std::string & pos, Side toplay){
-	if(toplay != hist->toplay())
-		return GTPResponse(false, "It is the other player's turn!");
 
 	if(hist->won() >= Outcome::DRAW)
 		return GTPResponse(false, "The game is already over.");
 
 	Move m(pos);
 
-	if(!hist->valid_move(m))
-		return GTPResponse(false, "Invalid move");
+	if(toplay != hist->toplay()){
+		MovePlayer mp(m, toplay);
 
-	move(m);
+		if(!hist->valid_move(mp))
+			return GTPResponse(false, "Invalid move");
 
-	if(verbose >= 2)
-		logerr("Placement: " + m.to_s() + ", outcome: " + hist->won().to_s() + "\n" + hist->to_s(colorboard));
+		//place stone and reset agent with new board since old tree is useless
+		//for out of order moves
+		place(mp);
 
-	return GTPResponse(true);
+		if(verbose >= 2)
+			logerr("Placement: " + m.to_s() + ", outcome: " + hist->won().to_s() + "\n" + hist->to_s(colorboard));
+
+		return GTPResponse(true);
+
+	}
+
+	else{
+		if(!hist->valid_move(m))
+			return GTPResponse(false, "Invalid move");
+
+		move(m);
+
+		if(verbose >= 2)
+			logerr("Placement: " + m.to_s() + ", outcome: " + hist->won().to_s() + "\n" + hist->to_s(colorboard));
+
+		return GTPResponse(true);
+	}
 }
 
 GTPResponse GTP::gtp_playgame(vecstr args){
 	GTPResponse ret(true);
+	Side player;
 
-	for(unsigned int i = 0; ret.success && i < args.size(); i++)
-		ret = play(args[i], hist->toplay());
+	for(unsigned int i = 0; ret.success && i < args.size(); i++){
+		if(args[i].length() == 3){
+			assert(args[i][2]=='w' || args[i][2]=='b');
+			player = args[i][2]=='w' ? Side::P1 : Side::P2;
+		}
+		else{
+			player = hist->toplay();
+		}
 
+		ret = play(args[i], player);
+	}
 	return ret;
 }
 
@@ -173,19 +175,14 @@ GTPResponse GTP::gtp_playwhite(vecstr args){
 	if(args.size() != 1)
 		return GTPResponse(false, "Wrong number of arguments");
 	
-        return play(args[0], Side::P1);
+    return play(args[0], Side::P1);
 }
 
 GTPResponse GTP::gtp_playblack(vecstr args){
 	if(args.size() != 1)
 		return GTPResponse(false, "Wrong number of arguments");
 
-    if(freeplace)
-        return place(args[0], Side::P2);
-    else{
-        return play(args[0], Side::P2);
-    }
-
+    return play(args[0], Side::P2);
 }
 
 GTPResponse GTP::gtp_winner(vecstr args){
